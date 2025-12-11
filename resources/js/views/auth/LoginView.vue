@@ -118,15 +118,43 @@ const handleSubmit = async () => {
         }
 
     } catch (error) {
-        // Manejo de errores
-        loginError.value =
-            authStore.error ||
-            error.message ||
-            'Ocurrió un error inesperado al intentar iniciar sesión.';
+
+        if (error.response) {
+            // ERRORES 422 VALIDACIÓN
+            if (error.response.status === 422) {
+                const errors = error.response.data?.data?.errors
+                    ?? error.response.data?.errors;
+
+                if (errors) {
+                    const firstKey = Object.keys(errors)[0];
+                    loginError.value = errors[firstKey][0];
+                } else {
+                    loginError.value = error.response.data.message;
+                }
+
+                // ERRORES 4XX-5XX PERSONALIZADOS
+            } else if (error.response.data?.message) {
+                loginError.value = error.response.data.message;
+
+            } else {
+                loginError.value = `Error del servidor: ${error.response.status}`;
+            }
+
+        } else {
+            loginError.value = "Error de conexión con el servidor.";
+        }
+
+        isError.value = true;
+        authStore.loading = false;
 
     } finally {
-        // Detener la carga, rompiendo el bloqueo del spinner
+        // 🔥 ESTO ES LO QUE TE FALTABA
         loading.value = false;
+        console.log("loading:false");
+        authStore.loading = false;
+
     }
+
+
 }
 </script>
