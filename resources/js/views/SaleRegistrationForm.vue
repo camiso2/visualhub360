@@ -46,9 +46,11 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">No. Factura (requerido)</label>
                                 <input type="text" v-model="saleDataNumberInvoide.invoice_number" required
-                                 @input="saleDataNumberInvoide.invoice_number = $getFormatInteger(saleDataNumberInvoide.invoice_number)"
+                                    @input="saleDataNumberInvoide.invoice_number = $getFormatInteger(saleDataNumberInvoide.invoice_number)"
                                     class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2" />
-                                                        <span class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 px-3 py-1 text-xs font-semibold rounded-full w-fit">Última Factura en Sucursal N° : {{ lastInvoiceNumberUI }} </span>
+                                <span
+                                    class="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 px-3 py-1 text-xs font-semibold rounded-full w-fit">Última
+                                    Factura en Sucursal N° : {{ lastInvoiceNumberUI }} </span>
 
                             </div>
 
@@ -59,7 +61,7 @@
                                 </label>
                                 <div class="flex gap-3 items-center">
                                     <input type="text" v-model.number="saleDataClient.client_document"
-                                    @input="saleDataClient.client_document = $getFormatInteger($event.target.value)"
+                                        @input="saleDataClient.client_document = $getFormatInteger($event.target.value)"
                                         @change="fetchClientByDocument" required
                                         class="mt-1 w-full rounded-md border-gray-300 shadow-sm p-2" />
 
@@ -139,16 +141,20 @@
                                         class="p-3 border rounded-lg bg-gray-50 flex items-start justify-between">
 
                                         <div>
-                                            <p class="text-sm"><span class="font-semibold">ID:</span> {{ doc.id }}</p>
+                                           <!-- <p class="text-sm"><span class="font-semibold">ID:</span> {{ doc.id }}</p>-->
                                             <p><span class="font-semibold">Emisor Documento/s:</span> {{
                                                 doc.name_company }}
                                             </p>
                                             <p class="text-sm"><span class="font-semibold">Descripción:</span> {{
                                                 doc.description }}</p>
 
-                                            <p class="text-sm"><span class="font-semibold">Fecha:</span> {{
-                                                doc.created_at
-                                                }}</p>
+                                            <p class="text-sm"><span class="font-semibold">Fecha Creación:</span>
+                                                {{ new Date(doc.created_at).toLocaleDateString('es-CO', {
+                                                    year: 'numeric', month: '2-digit', day: '2-digit',
+                                                    hour: '2-digit', minute: '2-digit'
+                                                }) }}
+
+                                            </p>
                                         </div>
 
                                         <!-- CHECKBOX (solo 1 seleccionado) -->
@@ -210,7 +216,8 @@
                     <div class="p-6 bg-white shadow-lg rounded-lg">
                         <h2 class="text-xl font-semibold mb-4 text-gray-800">Buscar Inventario por SKU</h2>
                         <form @submit.prevent="searchBySku" class="flex flex-col md:flex-row gap-3 md:gap-4 mb-6">
-                            <input v-model="skuInput" @input="skuInput = $getFormatInteger($event.target.value)" type="text" placeholder="Introduce el SKU del producto" required
+                            <input v-model="skuInput" @input="skuInput = $getFormatInteger($event.target.value)"
+                                type="text" placeholder="Introduce el SKU del producto" required
                                 class="w-full md:flex-grow p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
 
                             <button type="submit" :disabled="isLoading" class="w-full gradient-button md:w-auto px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700
@@ -292,7 +299,7 @@
                                     <button @click="addProductToSale(inventory)" :disabled="!paymentProviderList.length"
                                         class="w-full px-5 py-2 bg-green-600 text-white font-semibold rounded-lg
            hover:bg-green-700 transition duration-150 shadow-md
-           flex items-center justify-center gap-2 disabled:bg-gray-400">
+           flex items-center justify-center gap-2 disabled:bg-gray-400 gradient-button">
 
                                         <span class="flex items-center gap-2">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -393,15 +400,17 @@
                                     <div
                                         class="col-span-1 md:col-span-1 py-1 flex justify-between md:justify-center items-center order-4">
                                         <span class="md:hidden text-gray-500 text-xs font-semibold">Cantidad</span>
-                                        <input type="number" v-model.number="item.quantity" @input="item.quantity = $getFormatInteger($event.target.value)" min="1"
+                                        <input type="number" v-model.number="item.quantity"
+                                            @input="item.quantity = $getFormatInteger($event.target.value)" min="1"
                                             class="md:w-full w-1/2 border border-gray-300 rounded text-center text-sm p-1 focus:border-indigo-500 max-w-[80px]">
                                     </div>
 
                                     <div
                                         class="col-span-1 md:col-span-1 py-1 flex justify-between md:justify-center items-center order-5">
                                         <span class="md:hidden text-gray-500 text-xs font-semibold">Desc. (%)</span>
-                                        <input type="text" v-model.number="item.discount_percentage" @input="item.discount_percentage = $getFormatInteger($event.target.value)"  min="0"
-                                            :max="item.max_disscount" placeholder="0"
+                                        <input type="text" v-model.number="item.discount_percentage"
+                                            @input="item.discount_percentage = $getFormatInteger($event.target.value)"
+                                            min="0" :max="item.max_disscount" placeholder="0"
                                             class="md:w-full w-1/2 border border-gray-300 rounded text-center text-sm p-1 focus:border-indigo-500 max-w-[80px]">
                                     </div>
 
