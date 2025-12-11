@@ -963,7 +963,7 @@ const searchBySku = async () => {
                 messageInventory.value = `Error del servidor: ${error.response.status}`;
             }
         } else {
-            messageInventory.value = "Error de conexión con el servidor.";
+           // messageInventory.value = "Error de conexión con el servidor.";
         }
     } finally {
         // 7. Desactivar el Global Loader
@@ -1061,8 +1061,8 @@ const fetchClientByDocument = async () => {
 async function downloadInvoice(url) {
     try {
         const link = document.createElement('a');
-        link.href = url;              // aquí usas el parámetro correcto
-        link.download = '';           // permite usar el nombre original del PDF
+        link.href = url;// aquí usas el parámetro correcto
+        link.download = ''; // permite usar el nombre original del PDF
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -1145,6 +1145,9 @@ const submitSale = async () => {
 
         downloadInvoice(response.data.data.invoice_url);
 
+
+        console.log('Descarga URL de la factura : '+response.data.data.invoice_url)
+
         errorMessage.value = null;
         authStore.loading = false;
 
@@ -1172,7 +1175,7 @@ const submitSale = async () => {
             }
 
         } else {
-            errorMessage.value = "Error de conexión con el servidor.";
+            //errorMessage.value = "Error de conexión con el servidor.";
         }
 
         isError.value = true;

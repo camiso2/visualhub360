@@ -15,6 +15,9 @@ class InvoicePdfService
      */
     public function generateInvoice(Sale $sale): string
     {
+
+
+        //  Log::info('Invoice PDF generated successfully for sale: ' . json_encode($sale));
         // 1. Cargar las relaciones necesarias si no están ya cargadas
         $sale->loadMissing(['items', 'client', 'company', 'branch']);
 
@@ -29,11 +32,20 @@ class InvoicePdfService
         ];
 
         try {
+            if (!view()->exists('pdf.invoice_template')) {
+                Log::error('La vista pdf.invoice_template NO existe en la nueva ruta');
+            }
+            Pdf::setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true
+            ]);
             // 3. Renderizar la vista y generar el PDF
             $pdf = Pdf::loadView('pdf.invoice_template', $data);
-
+            // Log::info('Invoice PDF generated successfully for pdf: '. $pdf);
             // 4. Devolver el contenido del PDF como una cadena binaria
             return $pdf->output();
+
+
 
         } catch (\Exception $e) {
             Log::error('Error generating invoice PDF: ' . $e->getMessage(), ['sale_id' => $sale->id]);

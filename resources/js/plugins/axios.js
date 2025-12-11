@@ -4,7 +4,7 @@ import router from '@/router';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000/api',
+    baseURL: 'http://localhost:8001/api',
     headers: { Accept: 'application/json' }
 });
 

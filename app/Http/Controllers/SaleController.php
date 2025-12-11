@@ -11,6 +11,7 @@ use App\Models\AccountReceivable; // Importación necesaria para la nueva lógic
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use App\Custom\ApiResponseTrait;
 use Illuminate\Validation\Rule;
 use App\Services\InvoicePdfService;
@@ -401,10 +402,15 @@ class SaleController extends Controller
             $pdfUrl = null;
 
             try {
-                // Llama a tu servicio de PDF
+                // Llama a servicio de PDF
                 $pdfContent = $this->pdfService->generateInvoice($sale);
-                \Illuminate\Support\Facades\Storage::put('public/invoices/' . $pdfFilename, $pdfContent);
-                $pdfUrl = url('storage/invoices/' . $pdfFilename);
+                Storage::put('public/invoices/' . $pdfFilename, $pdfContent);
+                $pdfUrl = url('/storage/invoices/' . $pdfFilename);
+
+
+                Storage::put('public/invoices/test.txt', 'Funciona Storage!');
+
+
             } catch (\Exception $e) {
                 Log::error('Fallo la generacion de PDF para la venta: ' . $sale->id . '. Error: ' . $e->getMessage());
             }

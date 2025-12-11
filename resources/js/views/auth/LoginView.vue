@@ -144,7 +144,7 @@ const handleSubmit = async () => {
             loginError.value = "Error de conexión con el servidor.";
         }
 
-        isError.value = true;
+       // isError.value = true;
         authStore.loading = false;
 
     } finally {
