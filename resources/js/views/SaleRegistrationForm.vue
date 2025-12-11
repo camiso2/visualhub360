@@ -249,10 +249,9 @@
                         <div v-if="messageInventory"
                             class="p-3 mb-4 rounded-lg font-medium transition duration-300 col-span-full" :class="{
                                 // 🟢 ESTILO DE ÉXITO (Si se encontró un producto)
-                                'bg-green-100 text-green-800 border border-green-400': inventory,
-
-                                // 🔴 ESTILO de ERROR/ADVERTENCIA (Si no se encontró o hubo un error)
-                                'bg-red-100 text-red-800 border border-red-400': !inventory
+                                'bg-green-100 text-green-800 border border-green-400 p-4 rounded-lg text-sm border-l-4': inventory,
+                                // ESTILO de ERROR/ADVERTENCIA (Si no se encontró o hubo un error)
+                                'bg-indigo-100 text-indigo-800 border border-indigo-400 p-4 rounded-lg text-sm border-l-4': !inventory
                             }">
                             {{ messageInventory }}
                         </div>
@@ -855,7 +854,7 @@ const addProductToSale = (product) => {
         ? paymentProviderList.value[0]
         : { id: null, name: 'Efectivo' }; // Fallback si la lista está vacía
     const defaultProviderId = defaultProvider.id;
-    const defaultPaymentMethodName = defaultProvider.name; // ✅ CLAVE: Obtenemos el nombre
+    const defaultPaymentMethodName = defaultProvider.name; // CLAVE: Obtenemos el nombre
     // 2. Verificar si el producto ya está en el carrito
     const existingItem = saleItems.value.find(item => item.inventory_id === product.id);
     if (existingItem) {
@@ -944,7 +943,38 @@ const searchBySku = async () => {
             messageInventory.value = response.data.message || 'Ocurrió un error al procesar la búsqueda.';
         }
         authStore.loading = false;
-    } catch (error) {
+    }
+
+     catch (error) {
+        // 6. Manejo de error
+        console.error("Error en la operación de usuario:", error);
+        if (error.response) {
+            if (error.response.status === 422) {
+                const errors = error.response.data?.data?.errors ?? error.response.data?.errors;
+                if (errors) {
+                    const firstKey = Object.keys(errors)[0];
+                    messageInventory.value = errors[firstKey][0];
+                } else {
+                    messageInventory.value = error.response.data.message;
+                }
+            } else if (error.response.data?.message) {
+                messageInventory.value = error.response.data.message;
+            } else {
+                messageInventory.value = `Error del servidor: ${error.response.status}`;
+            }
+        } else {
+            messageInventory.value = "Error de conexión con el servidor.";
+        }
+    } finally {
+        // 7. Desactivar el Global Loader
+        loading.value = false;
+        authStore.loading = false;
+        isLoadingInventory.value = false;
+    }
+
+
+
+    /*catch (error) {
         // Manejar errores de red o errores HTTP (422, 500, etc.)
         console.error('Error durante la búsqueda:', error);
         // Manejo de error 422 (Validación )
@@ -956,7 +986,7 @@ const searchBySku = async () => {
     } finally {
         isLoadingInventory.value = false;
 
-    }
+    }*/
 };
 
 /**

@@ -24,7 +24,7 @@
             </div>
 
             <form @submit.prevent="handleSubmit" class="space-y-5">
-                <div v-if="loginError" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg text-sm"
+                <div v-if="loginError" class="bg-red-50  border-red-500 text-red-700 p-4 rounded-lg text-sm border-l-4"
                     role="alert">
                     <p class="font-semibold">Error de autenticación:</p>
                     <p>{{ loginError }}</p>
